@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 
@@ -12,12 +13,14 @@ app.use(session({
     cookie: {
         secure: false,
         httpOnly: true,
-        maxAge: 1000 * 60 * 30
+        maxAge: 1000 * 60 * 30 
     }
 }));
 
 app.use(cookieParser());
+
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(process.cwd(), 'pages/public')));
 
 const porta = 3000;
@@ -96,6 +99,59 @@ function cadastrarUsuarioView(req, res) {
     `);
 }
 
+function exibirUltimoLogin(req) {
+    const dataHoraUltimoLogin = req.cookies['dataHoraUltimoLogin'];
+    if (dataHoraUltimoLogin) {
+        return `<p><span>Seu último acesso foi realizado em ${dataHoraUltimoLogin}</span></p>`;
+    } else {
+        return `<p><span>Este é seu primeiro acesso.</span></p>`;
+    }
+}
+
+function menuView(req, resp) {
+    const mensagemUltimoLogin = exibirUltimoLogin(req);
+
+    resp.send(`
+        <!DOCTYPE html>
+        <html lang="pt-br">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Home</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        </head>
+        <body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Menu Principal</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Alternar navegação">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/cadastrarUsuario">Cadastrar Usuários</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="/enviarMensagem">Bate-Papo</a>
+        </li>        
+        <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="/logout">Sair</a>
+        </li>
+      </ul>
+     <div class="mb-3">
+          ${mensagemUltimoLogin}
+     </div>
+    </div>
+  </div>
+</nav>
+</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</html> `)
+}
+
+
+
 function cadastrarUsuario(req, resp) {
     const mensagemUltimoLogin = exibirUltimoLogin(req);
 
@@ -150,57 +206,6 @@ function cadastrarUsuario(req, resp) {
     </html>
     `);
     resp.end();
-}
-
-function menuView(req, resp) {
-    const mensagemUltimoLogin = exibirUltimoLogin(req);
-
-    resp.send(`
-        <!DOCTYPE html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Home</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        </head>
-        <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Menu Principal</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Alternar navegação">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/cadastrarUsuario">Cadastrar Usuários</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/enviarMensagem">Bate-Papo</a>
-        </li>        
-        <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/logout">Sair</a>
-        </li>
-      </ul>
-     <div class="mb-3">
-          ${mensagemUltimoLogin}
-     </div>
-    </div>
-  </div>
-</nav>
-</body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</html> `)
-}
-
-function exibirUltimoLogin(req) {
-    const dataHoraUltimoLogin = req.cookies['dataHoraUltimoLogin'];
-    if (dataHoraUltimoLogin) {
-        return `<p><span>Seu último acesso foi realizado em ${dataHoraUltimoLogin}</span></p>`;
-    } else {
-        return `<p><span>Este é seu primeiro acesso.</span></p>`;
-    }
 }
 
 function exibirBatePapoView(req, res) {
@@ -338,15 +343,16 @@ function autenticarUsuario(req, resp) {
             </html>
         `);
     }
-}
+}    
 
 function verificarAutenticacao(req, resp, next) {
+    console.log("Sessão ativa:", req.session);
     if (req.session.usuarioLogado) {
         next();
     } else {
         resp.redirect('/login.html');
     }
-}
+}    
 
 app.get('/login', (req, resp) =>{
     resp.redirect('/login.html');
@@ -358,11 +364,12 @@ app.get('/logout', (req, resp) => {
 });
 
 app.post('/login', autenticarUsuario);
-app.get('/',verificarAutenticacao,menuView);
-app.get('/cadastrarUsuario', verificarAutenticacao,cadastrarUsuarioView);
+app.get('/', verificarAutenticacao, menuView);
+app.get('/cadastrarUsuario', verificarAutenticacao, cadastrarUsuarioView);
+app.post('/cadastrarUsuario', verificarAutenticacao, cadastrarUsuario);
 app.get('/enviarMensagem', verificarAutenticacao, exibirBatePapoView);
 app.get('/batePapo', verificarAutenticacao);
-app.post('/cadastrarUsuario', verificarAutenticacao, cadastrarUsuario);
+
 app.listen(porta, host, () => {
     console.log(`Servidor iniciado e em execução no endereço http://${host}:${porta}`);
 });
