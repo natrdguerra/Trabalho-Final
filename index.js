@@ -60,11 +60,12 @@ function cadastrarUsuarioView(req, res) {
                         <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Digite o seu nickname" required>
                         <span class="text-danger" id="erronickname"></span>
                     </div>
-                    <button type="submit" class="btn btn-dark">Cadastrar Usuário</button>
+                    <button type="submit" class="btn btn-dark">Cadastrar</button>
+                    <a class="btn btn-dark" href="/" role="button">Voltar para o menu</a>
                     <br><br>
-                     <div class="mb-3">
+                    <div class="mb-3">
                      ${mensagemUltimoLogin}
-                     </div>
+                    </div>
                 </form>
             </div>
                         <script>
@@ -149,8 +150,6 @@ function menuView(req, resp) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </html> `)
 }
-
-
 
 function cadastrarUsuario(req, resp) {
     const mensagemUltimoLogin = exibirUltimoLogin(req);
@@ -261,6 +260,7 @@ function exibirBatePapoView(req, res) {
                         ${mensagensHTML}
                     </div>
                     <br>
+                    <a class="btn btn-dark" href="/cadastrarUsuario" role="button">Cadastrar Usuário</a>
                     <a class="btn btn-dark" href="/" role="button">Voltar para o menu</a>
                     <br><br>
                     <div class="mb-3">
