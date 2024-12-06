@@ -60,6 +60,16 @@ function cadastrarUsuarioView(req, res) {
                         <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Digite o seu nickname" required>
                         <span class="text-danger" id="erronickname"></span>
                     </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu e-mail" required>
+                        <span class="text-danger" id="erroEmail"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
+                        <span class="text-danger" id="erroSenha"></span>
+                    </div>
                     <button type="submit" class="btn btn-dark">Cadastrar</button>
                     <a class="btn btn-dark" href="/" role="button">Voltar para o menu</a>
                     <br><br>
@@ -68,8 +78,8 @@ function cadastrarUsuarioView(req, res) {
                     </div>
                 </form>
             </div>
-                        <script>
-                document.getElementById('formCadastro').addEventListener('submit', function(event) {
+            <script>
+                    document.getElementById('formCadastro').addEventListener('submit', function(event) {
                     let isValid = true;
 
                     document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
@@ -88,6 +98,16 @@ function cadastrarUsuarioView(req, res) {
                     if (!document.getElementById('nickname').value.trim()) {
                         document.getElementById('erronickname').textContent = 'O nickname é obrigatório.';
                         document.getElementById('nickname').classList.add('is-invalid');
+                        isValid = false;
+                    }
+                    if (!document.getElementById('email').value.trim()) {
+                        document.getElementById('erroEmail').textContent = 'O e-mail é obrigatório.';
+                        document.getElementById('email').classList.add('is-invalid');
+                        isValid = false;
+                    }
+                    if (!document.getElementById('senha').value.trim()) {
+                        document.getElementById('erroSenha').textContent = 'A senha é obrigatória.';
+                        document.getElementById('senha').classList.add('is-invalid');
                         isValid = false;
                     }
                     if (!isValid) {
@@ -176,7 +196,7 @@ function cadastrarUsuario(req, resp) {
                 <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">Nascimento</th>
-                    <th scope="col">Nickname</th>
+                    <th scope="col">Usuário</th>
                 </tr>
             </thead>
             <tbody>`);
@@ -240,9 +260,9 @@ function exibirBatePapoView(req, res) {
                 <h1>Bate-Papo</h1>
                 <form id="formMensagem" action="/enviarMensagem" method="POST" novalidate>
                     <div class="mb-3">
-                        <label for="usuario" class="form-label">Escolha o Nickname</label>
+                        <label for="usuario" class="form-label">Escolha o Usuário</label>
                         <select class="form-control" id="usuario" name="usuario" required>
-                            <option value="" disabled selected>Selecione um nickname</option>
+                            <option value="" disabled selected>Selecione um usuário</option>
                             ${opcoesNicknames}
                         </select>
                         <span class="text-danger" id="erroUsuario"></span>
@@ -267,8 +287,7 @@ function exibirBatePapoView(req, res) {
                     ${mensagemUltimoLogin}
                     </div>
                 </div>
-            </div>
-            
+            </div>    
             <script>
              document.getElementById('formMensagem').addEventListener('submit', function(event) {
              let isValid = true;
@@ -287,8 +306,6 @@ function exibirBatePapoView(req, res) {
              document.getElementById('mensagem').classList.add('is-invalid');
              isValid = false;
         }
-
-        // Se não for válido, impede o envio do formulário
              if (!isValid) {
              event.preventDefault();
          }
